@@ -20,12 +20,21 @@ class RoundRobin(Scheduler):
         active queue (if there exist one) and push the active item back into
         the queue.
         """
-        
-        # TODO: Implement your code here.
+        # Check if there is an active process
+        if self.active_process is None:
+            # No active process, get the next process from the queue
+            if len(self.queue) > 0:
+                self.active_process = self.queue.pop(0)
+        else:
+            # There is an active process, push it back into the queue
+            self.queue.append(self.active_process)
+            self.active_process = None
+
+        return self.active_process
 
     def timer_interrupt(self):
         """
-        Timer interrupts only when the current active task has ran out of
+        Timer interrupts only when the current active task has run out of
         its time quantum or has stopped execution.
         """
         default = super(RoundRobin, self).timer_interrupt()
