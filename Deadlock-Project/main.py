@@ -1,9 +1,44 @@
 from operator import add
 
 def detect(process, allocation, request, work):
-	""" TODO: Implement a selected deadlock detection algorithm, 
-		detect: receives processes, allocations, requests, and work 
-		and returns true if a deadlock is detected otherwise false.   """
+    n = len(process)
+    m = len(work)
+
+    # Create copies of the allocation and work lists
+    work_copy = list(work)
+
+    f = [0] * n
+    ans = [0] * n
+    ind = 0
+    for k in range(n):
+        f[k] = 0
+
+    need = [[0 for i in range(m)] for i in range(n)]
+    for i in range(n):
+        for j in range(m):
+            need[i][j] = request[i][j] - allocation[i][j]
+
+    while ind < n:
+        found = False
+        for p in range(n):
+            if f[p] == 0:
+                for j in range(m):
+                    if need[p][j] > work_copy[j]:
+                        break
+
+                if j == m - 1:
+                    for k in range(m):
+                        work_copy[k] += allocation[p][k]
+                    ans[ind] = p
+                    ind += 1
+                    f[p] = 1
+                    found = True
+
+        if not found:
+            return True
+
+    return False
+
 
 if __name__=='__main__':
 	'''
@@ -22,6 +57,10 @@ if __name__=='__main__':
 	request=[[0, 0, 0], [2, 0, 2], [0, 0, 0], [1, 0, 0], [0, 0, 2]]
 	available=[0, 0, 0]
 
-	detect(process, allocation, request, available)
 
+	is_deadlock = detect(process, allocation, request, available)
+	if is_deadlock:
+		print("Deadlock detected.")
+	else:
+		print("No deadlock detected.")
 
