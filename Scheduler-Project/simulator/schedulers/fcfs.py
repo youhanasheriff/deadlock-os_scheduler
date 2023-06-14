@@ -12,4 +12,16 @@ class FCFS(Scheduler):
         only change process as the processes finish their execution on the
         CPU.
         """
-        # TODO: Implement here your code.
+        if not self.active:
+            if self.q:
+                self.active = self.q.popleft()
+            return self.active
+
+        # Get next
+        if self.q:
+            nxt = self.q.popleft()
+        else:
+            nxt = None
+
+        self.active = nxt
+        return nxt
