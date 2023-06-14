@@ -21,26 +21,23 @@ class RoundRobin(Scheduler):
         the queue.
         """
         
-                # No active current job
-        if not self.active:
+        if not self.active:  # No active current job
             if self.q:
                 self.active = self.q.popleft()
             self.curr_q = 0
             return self.active
 
-        # Active job still have yet to complete
-        if self.active.burst_time > 0:
-            self.q += [self.active]
+        if self.active.burst_time > 0:  # Active job still needs to complete
+            self.q.append(self.active)
 
-        # Get next
         if self.q:
-            nxt = self.q.popleft()
+            self.active = self.q.popleft()
         else:
-            nxt = None
-        self.curr_q = 0
-        self.active = nxt
+            self.active = None
 
-        return nxt
+        self.curr_q = 0
+
+        return self.active
 
     def timer_interrupt(self):
         """
