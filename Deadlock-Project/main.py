@@ -4,48 +4,38 @@ def detect(process, allocation, request, work):
     n = len(process)
     m = len(work)
 
-    avail = list(work)
-        
-    # Allocation Matrix
-    alloc = [list(row) for row in allocation]
-        
-    # MAX Matrix
-    max = [list(row) for row in request]
-        
+    # Create copies of the allocation and work lists
+    allocation_copy = [list(row) for row in allocation]
+    work_copy = list(work)
+
     f = [0] * n
-    ans = [0] * n
-    ind = 0
-    found = False
-    for k in range(n):
-        f[k] = 0
-        
-    need = [[ 0 for i in range(m)]for i in range(n)]
+    ans = []
+    completed = 0
+
+    need = [[0 for i in range(m)] for i in range(n)]
     for i in range(n):
         for j in range(m):
-            need[i][j] = max[i][j] - alloc[i][j]
-    y = 0
-    for k in range(5):
-        for i in range(n):
-            if (f[i] == 0):
-                flag = 0
-                for j in range(m):
-                    if (need[i][j] > avail[j]):
-                        flag = 1
-                        break
+            need[i][j] = request[i][j] - allocation[i][j]
 
-                if (flag == 0):
-                    ans[ind] = i
-                    ind += 1
-                    for y in range(m):
-                        avail[y] += alloc[i][y]
-                    f[i] = 1
+    while completed < n:
+        found = False
+        for p in range(n):
+            if f[p] == 0:
+                for j in range(m):
+                    if need[p][j] > work_copy[j]:
+                        break
+                else:
+                    for k in range(m):
+                        work_copy[k] += allocation_copy[p][k]
+                    ans.append(p)
+                    f[p] = 1
+                    completed += 1
                     found = True
 
-    if not found:
-        return False
-    else:
-        return True
+        if not found:
+            return False, []
 
+    return True, ans
 
 
 if __name__=='__main__':
@@ -70,10 +60,11 @@ if __name__=='__main__':
     request=[[0, 0, 0], [2, 0, 2], [0, 0, 0], [1, 0, 0], [0, 0, 2]]
     available=[0, 0, 0]
 
+    is_deadlock, safe_sequence = detect(process, allocation, request, available)
 
-    is_deadlock = detect(process, allocation, request, available)
     if is_deadlock:
         print("Deadlock detected.")
+        print("Safe Sequence:", safe_sequence)
     else:
         print("No deadlock detected.")
 
