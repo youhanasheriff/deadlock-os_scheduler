@@ -3,13 +3,11 @@ import sys
 from copy import deepcopy
 
 from simulator.core.process import Process
-from simulator.schedulers import FCFS, RoundRobin, SRTF, SJF
+from simulator.schedulers import FCFS, RoundRobin
 
 RESULT_DIR = 'schedules'
 RESULT_FCFS = 'FCFS.txt'
 RESULT_RR = 'RR.txt'
-RESULT_SRTF = 'SRTF.txt'
-RESULT_SJF = 'SJF.txt'
 
 
 def read_input(input_file):
@@ -38,7 +36,7 @@ if __name__ == '__main__':
 
     # Schedulers
     schedulers = [FCFS(), RoundRobin()]
-    result_names = [RESULT_FCFS, RESULT_RR, RESULT_SRTF, RESULT_SJF]
+    result_names = [RESULT_FCFS, RESULT_RR]
 
     for idx, scheduler in enumerate(schedulers):
         schedule = scheduler.schedule(deepcopy(processes))
