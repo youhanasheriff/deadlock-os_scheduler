@@ -9,7 +9,7 @@ OS scheduling simulator:
 
 run:
 
-`python -m simulator examples/test1.in`
+`python -m simulator examples/input.in`
 
 The output will be found in the directory `schedules`.
 
