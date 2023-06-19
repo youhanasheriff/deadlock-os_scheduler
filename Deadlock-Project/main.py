@@ -4,40 +4,48 @@ def detect(process, allocation, request, work):
     n = len(process)
     m = len(work)
 
-    # Create copies of the allocation and work lists
-    work_copy = list(work)
-
+    avail = list(work)
+        
+    # Allocation Matrix
+    alloc = [list(row) for row in allocation]
+        
+    # MAX Matrix
+    max = [list(row) for row in request]
+        
     f = [0] * n
     ans = [0] * n
     ind = 0
+    found = False
     for k in range(n):
         f[k] = 0
-
-    need = [[0 for i in range(m)] for i in range(n)]
+        
+    need = [[ 0 for i in range(m)]for i in range(n)]
     for i in range(n):
         for j in range(m):
-            need[i][j] = request[i][j] - allocation[i][j]
-
-    while ind < n:
-        found = False
-        for p in range(n):
-            if f[p] == 0:
+            need[i][j] = max[i][j] - alloc[i][j]
+    y = 0
+    for k in range(5):
+        for i in range(n):
+            if (f[i] == 0):
+                flag = 0
                 for j in range(m):
-                    if need[p][j] > work_copy[j]:
+                    if (need[i][j] > avail[j]):
+                        flag = 1
                         break
 
-                if j == m - 1:
-                    for k in range(m):
-                        work_copy[k] += allocation[p][k]
-                    ans[ind] = p
+                if (flag == 0):
+                    ans[ind] = i
                     ind += 1
-                    f[p] = 1
+                    for y in range(m):
+                        avail[y] += alloc[i][y]
+                    f[i] = 1
                     found = True
 
-        if not found:
-            return True
+    if not found:
+        return False
+    else:
+        return True
 
-    return False
 
 
 if __name__=='__main__':
@@ -51,6 +59,11 @@ if __name__=='__main__':
     request=input('Enter request: ').split()
     available=input('Enter available resources: ')
     '''
+
+    # process=[0, 1, 2, 3, 4]
+    # allocation=[[0, 1, 0 ],[ 2, 0, 0 ],[3, 0, 2 ],[2, 1, 1] ,[ 0, 0, 2]]
+    # request=[[7, 5, 3 ],[3, 2, 2 ],[ 9, 0, 2 ],[2, 2, 2],[4, 3, 3]]
+    # available=[3, 3, 2]
 
     process=[0, 1, 2, 3, 4]
     allocation=[[0, 1, 0], [2, 0, 0], [3, 0, 3], [2, 1, 1], [0, 0, 2]]
