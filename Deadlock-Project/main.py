@@ -64,7 +64,7 @@ if __name__=='__main__':
 
     if is_deadlock:
         print("Deadlock detected.")
-        print("Safe Sequence:", safe_sequence)
+        # print("Safe Sequence:", safe_sequence)
     else:
         print("No deadlock detected.")
 
